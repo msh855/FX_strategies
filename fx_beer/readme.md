@@ -8,4 +8,10 @@ Construct an Error Correction Model to estimate the impact of valuation misalign
 Perform out-of-sample predictive, recursive panel regression.
 
 Construct a macro trading model based takes long-term positions in currencies only if the currency misalignment versus the fair value estimate is extreme.
-![image](https://user-images.githubusercontent.com/106360966/226069400-f592e0d9-512e-47e4-b34d-09cb3c7e1ba6.png)
+
+# FILES
+main.py: the source code of the project <br>
+requirements.txt: required packages to run main.py <br>
+fx_beer_data_xlsx: excel file contains the data used in main (fx levels, terms of trade, gross fixed capital formation % gdp, <br>
+yield levels, cpi index, productivity index) <br>
+g12_fx_valuation.ppt: powerpoint presentation with our findings <br>
