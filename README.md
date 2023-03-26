@@ -12,6 +12,7 @@ Public repo holding my projects: systematic models on financial markets
 ####  2.7 Carry models
 ####  2.8 Sentiment models
 ####  2.9 Technical models
+####  2.10 Seasonal models
 ### 1.2 EQUITY INDEX MODELS
 ####  1.2.1 FACTOR ROTATION MODELS
 ####  1.2.2 COUNTRY ROTATION MODELS
