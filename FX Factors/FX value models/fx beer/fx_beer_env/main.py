@@ -110,6 +110,24 @@ sns.despine()
 plt.savefig('fx_chart_convention.png', dpi=300)
 plt.show()
 
+# %% faster way to plot multiple time_series
+
+fig.tight_layout()
+fx_data[g12_tickers].plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='FX prices quoted in USD',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
+plt.savefig('fx_chart.png', dpi=300)
+plt.show()
 # %% plot of fx_pairs with usd as the quoted currency
 
 fig, ax = plt.subplots(nrows=12, figsize=(7, 9), sharex=True)
@@ -121,6 +139,36 @@ for index, currency in enumerate(g12_tickers):
 sns.despine()
 plt.savefig('fx_chart.png', dpi=300)
 plt.show()
+
+# %% example of seasonal decompose for a currency level
+
+eur_decomp = sm.tsa.seasonal_decompose(fx_data.eurusd)
+eur_decomp.plot()
+plt.show()
+
+# %% example of seasonal decompose for a currency return
+
+# looking at mean log returns per month
+eurusd_return = fx_log.eurusd.diff().dropna()
+eur_months = eurusd_return.index.month
+group = eurusd_return.groupby(eur_months).mean()
+group.index = pd.to_datetime(group.index, format='%m').strftime('%b')
+plt.style.use(plt.style.available[-1])
+ax = group.plot(kind='bar')
+ax.set_title('Average monthly log performance of EURUSD since 1996')
+ax.set_ylabel('log return')
+sns.despine()
+plt.show()
+
+# looking at seasonal decomp figure
+eur_ret_decomp = sm.tsa.seasonal_decompose(eurusd_return)
+eur_ret_decomp.plot()
+plt.show()
+
+# %% tests significance of december mean return
+eur_dec_returns = eurusd_return[eurusd_return.index.month == 12]
+eur_dec_test = stats.ttest_1samp(eur_dec_returns, 0, alternative='greater')
+print(eur_dec_test)
 
 # %% construct df for relative terms of trade (tot)
 
@@ -147,6 +195,25 @@ for index, tot in enumerate(tot_ratio.columns):
     ax[index].legend(loc='upper left', fontsize=7)
 sns.despine()
 plt.savefig('relative_tot_chart.png', dpi=300)
+plt.show()
+
+
+# %% nicer plot of
+
+fig.tight_layout()
+tot_ratio.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='Relative Terms of Trade vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
 plt.show()
 
 # %% plot scatter plots of fx_log versus tot_log_ratio
@@ -191,6 +258,24 @@ for index, gfc in enumerate(gfc_ratio.columns):
     ax[index].legend(loc='upper left', fontsize=7)
 sns.despine()
 plt.savefig('relative_gfc_chart.png', dpi=300)
+plt.show()
+
+# %% nicer plot of gfc ratio
+
+fig.tight_layout()
+gfc_ratio.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='Relative Gross Fixed Capital Formation as % of GDP vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
 plt.show()
 
 # %% plot scatter plots of fx_log versus gfc_log_ratio
@@ -245,6 +330,42 @@ for index, yield_diff in enumerate(cee3_yield_diff.columns):
     ax[index + 9].legend(loc='upper left', fontsize=7)
 sns.despine()
 plt.savefig('yield_diff_chart.png', dpi=300)
+plt.show()
+
+# %% nicer plot of yield diff
+
+fig.tight_layout()
+g9_yield_diff.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='10Y Yield Difference vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
+plt.show()
+
+# %% nicer plot of yield diff
+
+fig.tight_layout()
+cee3_yield_diff.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='10Y Yield Difference vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
 plt.show()
 
 # %% plot scatter plots of fx_log versus yield_diff
@@ -310,6 +431,24 @@ sns.despine()
 plt.savefig('relative_cpi_chart.png', dpi=300)
 plt.show()
 
+# %% nicer plot of cpi ratio
+
+fig.tight_layout()
+cpi_log_ratio.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='log cpi ratio vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
+plt.show()
+
 # %% plot scatter plots of fx_log versus cpi_log_ratio
 
 fig, ax = plt.subplots(nrows=6, ncols=2, figsize=(7, 9))
@@ -353,6 +492,23 @@ sns.despine()
 plt.savefig('relative_prod_chart.png', dpi=300)
 plt.show()
 
+# %% nicer plot of cpi ratio
+
+fig.tight_layout()
+prod_ratio.plot(
+    subplots=True,
+    layout=(4, 3),
+    figsize=(10, 6),
+    title='Productivity Index ratio vs. US',
+    cmap='tab20',
+    sharex=False,
+    sharey=False,
+    fontsize=6,
+    linewidth=1,
+    legend=True,
+)
+sns.despine()
+plt.show()
 # %% plot scatter plots of fx_log versus prod_log_ratio
 
 fig, ax = plt.subplots(nrows=6, ncols=2, figsize=(7, 9))
@@ -426,6 +582,15 @@ panel_data_and_dummies = panel_data_and_dummies.reset_index()  # make a multiind
 panel_data_and_dummies.set_index(['currency', 'date'], inplace=True)  # outer index is currency, inner is date
 panel_data_and_dummies.sort_index(inplace=True)  # multi-indices work best if they are sorted for slicing later
 
+# %% plot correlation heatmap and cluster-map (correlationas always on differences, never levels)
+
+matrix = panel_data_and_dummies[['fx_log', 'tot_log_ratio', 'gfc_log_ratio', 'yield_diff',
+                                 'cpi_log_ratio', 'prod_log_ratio']].diff().dropna().\
+                                 corr(method='pearson')
+sns.heatmap(matrix)
+plt.show()
+sns.clustermap(matr)
+plt.show()
 # %% plot acf of differenced log fx for just one currency:
 
 plot_acf(fx_log.eurusd.diff().dropna(), zero=False, lags=12, alpha=0.05)
@@ -473,13 +638,25 @@ formula = 'fx_log ~ tot_log_ratio + gfc_log_ratio + yield_diff + cpi_log_ratio +
 is_model = ols(formula=formula, data=panel_data_and_dummies).fit()
 print(is_model.summary())
 
-# %% test for cointegration using Engle-Granger: test for stationarity on the estimated residuals
+# %% test for cointegration using ADF on residuals : test for stationarity on the estimated residuals
 # of the regression that estimates the long run relationship between fx and variables
 # the residuals are nothing more than the deviations from fair value
+# if ADF (test for random walk (non-stationary) on residuals shows residuals are stationary=
+# residuals (=linear combo of all time series) is stationary and series are coint and the residuals (deviations)
+# are mean-reverting in nature (leash of dog and owner dog is mean-reverting and predictable)
 
 residual_stationary_test = adfuller(is_model.resid)
 print(f'The adf-test on the residuals of our panel regression has a test-statistic '
       f'of {residual_stationary_test[0]} and a p-value of {residual_stationary_test[1]}')
+
+# %% plot residuals if stationary
+# if p <0.05 reject the null of a unit root (random walk, non-stationary) and residuals are stationary
+# then plot residuals to see the stationary (mean reversion proces)
+
+is_model.resid.plot(title='residual plot (deviation from fair value, (is it mean-reverting? \n'
+                          ' residual = linear combination of all series which is stationary after adf test')
+plt.show()
+
 
 # %% in_sample predictions: fitted values
 
