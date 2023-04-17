@@ -6,7 +6,7 @@ import seaborn as sns
 
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.formula.api import glm
 from statsmodels.formula.api import ols
 import scipy.stats as stats
@@ -55,8 +55,8 @@ def cross_correlation(target, feature, lag=0):
 
 
 # %% import the xlsx sheets
-
-data = pd.read_excel('fx_beer_data.xlsx', engine='openpyxl',
+load_data_path = 'P:\\Models\\GithubRepos\\HansHeytens\\FX_strategies\\FX Factors\FX value models\\fx beer\\fx_beer_env\\fx_beer_data.xlsx'
+data = pd.read_excel(load_data_path, engine='openpyxl',
                      sheet_name=['fx', 'tot', 'gfc', 'yield', 'cpi', 'prod'])
 
 # %% global variables
@@ -65,7 +65,6 @@ end_date_panel = '2023-02-28'
 
 # %% construct df for fx prices: transform fx prices (make aligned time series, resample eom, naming,
 # base_fx/quote_fx, log of pairs)
-
 fx_data = data['fx'].set_index('date')
 fx_data = fx_data.resample('M').last()
 
@@ -141,7 +140,6 @@ plt.savefig('fx_chart.png', dpi=300)
 plt.show()
 
 # %% example of seasonal decompose for a currency level
-
 eur_decomp = sm.tsa.seasonal_decompose(fx_data.eurusd)
 eur_decomp.plot()
 plt.show()
@@ -196,7 +194,6 @@ for index, tot in enumerate(tot_ratio.columns):
 sns.despine()
 plt.savefig('relative_tot_chart.png', dpi=300)
 plt.show()
-
 
 # %% nicer plot of
 
@@ -585,11 +582,11 @@ panel_data_and_dummies.sort_index(inplace=True)  # multi-indices work best if th
 # %% plot correlation heatmap and cluster-map (correlationas always on differences, never levels)
 
 matrix = panel_data_and_dummies[['fx_log', 'tot_log_ratio', 'gfc_log_ratio', 'yield_diff',
-                                 'cpi_log_ratio', 'prod_log_ratio']].diff().dropna().\
-                                 corr(method='pearson')
+                                 'cpi_log_ratio', 'prod_log_ratio']].diff().dropna(). \
+    corr(method='pearson')
 sns.heatmap(matrix)
 plt.show()
-sns.clustermap(matr)
+sns.clustermap(matrix)
 plt.show()
 # %% plot acf of differenced log fx for just one currency:
 
@@ -657,7 +654,6 @@ is_model.resid.plot(title='residual plot (deviation from fair value, (is it mean
                           ' residual = linear combination of all series which is stationary after adf test')
 plt.show()
 
-
 # %% in_sample predictions: fitted values
 
 # multi-index series with fair values predicted in_sample (is)
@@ -685,7 +681,6 @@ predictors_vecm = predictors_vecm.dropna()
 
 # align response again
 response_vecm = response_vecm.tail(-4)
-
 
 # %% the  vecm model
 vecm_model = sm.OLS(response_vecm, predictors_vecm).fit()
@@ -790,7 +785,6 @@ for currency in g12_tickers:
     plt.show()
 
     end_of_period_values.append((currency, np.round(deviation_perc_oos[-1], 2), np.round(deviation_z_oos[-1], 2)))
-
 
 # %% random
 
